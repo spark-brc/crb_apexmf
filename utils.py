@@ -114,6 +114,7 @@ def get_stats_df(df, sims):
 
 def get_watershed_list():
     ws_nams = [f.name for f in os.scandir("./resources/watershed") if f.is_dir()]
+    ws_nams.sort()
     full_paths = [f.path for f in os.scandir("./resources/watershed") if f.is_dir()]
     return ws_nams, full_paths
 

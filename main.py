@@ -37,6 +37,7 @@ This app helps analyze CRB APEX-MODFLOW model performance.
 """)
 
 ws_nams, full_paths = utils.get_watershed_list()
+
 col1, line, col2, col3, col4 = st.beta_columns([0.2, 0.05, 0.1, 0.15, 0.2])
 area = col1.selectbox(
     "Select Watershed", ws_nams
