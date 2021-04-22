@@ -17,7 +17,7 @@ An Animas MODFLOW model has been created and linked with its APEX model. More de
 	-	Huscroft et al., 2018 (https://dataverse.scholarsportal.info/dataset.xhtml?persistentId=doi:10.5683/SP2/TTJNIU) compiled and mapped global permeability of the unconsolidated and consolidated Earth. We used a variable "Near surface global permeability values (logarithmic permeability)" and convert them to Hydraulic Conductivity values (m2/day).
 -	River package (Figure 1.c):
 	-	A MODFLOW river package has been created using the river network information of the APEX model to provide "river stage", "riverbed conductance" and "riverbed bottom elevation" for each river grid cell. Riverbed thickness and conductance were set to 0.1, respectively and these variables were parameterized.
-
+<img src="/resources/watershed/Animas/description/ani_model_inputs.png" alt="Trulli" width="500" height="333">
 ![](/resources/watershed/Animas/description/ani_model_inputs.png)
 - Figure 1. Maps of inputs for a steady-state MODFLOW model ==* Hydraulic Conductivity, Specific Yield, Riverbed Conductance and Riverbed thickness variables will be parameterized in an APEX-MODFLOW model.==
 

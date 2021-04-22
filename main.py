@@ -100,11 +100,13 @@ if area == ws_nams[2]:
 
 
 def main(df, sims):
-    tdf = st.beta_expander('Simulated and Observed Streamflow for {} APEX-MODFLOW Watershed Model'.format(area))
+    tdf = st.beta_expander('Surface Water Simulation for {}'.format(area))
     tdf.dataframe(df, height=500)
     tdf.markdown(utils.filedownload(df), unsafe_allow_html=True)
+    st.markdown("## Hydrographs for stream discharge")
     st.plotly_chart(utils.get_plot(df, sims), use_container_width=True)
     stats_df = utils.get_stats_df(df, sims)
+    
 
     with col4:
         st.markdown(
@@ -112,7 +114,22 @@ def main(df, sims):
             ### Objective Functions
             """)
         st.dataframe(stats_df.T)
-    wtdf = st.beta_expander('Simulated and Observed Groundwater Level for {} APEX-MODFLOW Watershed Model'.format(area))
+
+    tcol1, tcol2 = st.beta_columns([0.5, 0.5])
+    tcol1.markdown("## Flow Duration Curve")
+    tcol2.markdown("## Waterbalance Map (ing)")
+    
+    pcol1, pcol2, pcol3= st.beta_columns([0.1, 0.4, 0.5])
+    yscale = pcol1.radio("Select Y-axis scale", ["Linear", "Logarithmic"])
+    pcol2.plotly_chart(utils.get_fdcplot(df, sims, yscale), use_container_width=True)
+    # pcol3.image('tenor.gif')
+    pcol3.plotly_chart(
+        utils.viz_biomap(),
+        # use_container_width=True
+        )
+
+    wtdf = st.beta_expander('Groundwater Simulation for {}'.format(area))
+    wtdf.image('tenor.gif')
     mddf = st.beta_expander('{} Model Description'.format(area))
     # tdf.dataframe(df, height=500)
 
@@ -120,7 +137,7 @@ def main(df, sims):
         os.path.join("./resources/watershed", "Animas/description", "Animas APEX-MODFLOW.md")
     )
     mddf.markdown(intro_markdown, unsafe_allow_html=True)
-    mddf.markdown(intro_markdown, unsafe_allow_html=True)
+    # mddf.markdown(intro_markdown, unsafe_allow_html=True)
 
 
 @st.cache

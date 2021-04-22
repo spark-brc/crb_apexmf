@@ -1,6 +1,7 @@
 import glob
 import os
 import pandas as pd
+import numpy as np
 import streamlit as st
 import random
 import geopandas as gpd
@@ -10,7 +11,6 @@ import plotly.offline as offline
 import plotly.express as px
 import plotly.graph_objects as go
 from matplotlib import cm
-import numpy as np
 from hydroeval import evaluator, nse, rmse, pbias
 import base64
 from pathlib import Path
@@ -46,7 +46,6 @@ def get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate):
     tot_df = tot_df[caldate:eddate]
     return tot_df
 
-
 def get_plot(df, sims):
     fig = go.Figure()
     colors = (get_matplotlib_cmap('tab10', bins=8))
@@ -71,7 +70,7 @@ def get_plot(df, sims):
         # width=1200
     )
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='')
-    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Stream Discharge (m<sup>3</sup>/s)')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Monthly Average Stream Discharge (m<sup>3</sup>/s)')
     fig.update_layout(legend=dict(
         yanchor="top",
         y=1.0,
@@ -85,6 +84,53 @@ def get_plot(df, sims):
                                             color='white')
                                             ),
                     selector=dict(mode='markers'))
+    return fig
+
+def get_fdcplot(df, sims, yscale):
+    fig = go.Figure()
+    colors = (get_matplotlib_cmap('tab10', bins=8))
+    for i in range(len(sims)):
+        sort = np.sort(df.iloc[:, i])[::-1]
+        exceedence = np.arange(1.,len(sort)+1) / len(sort)
+
+        fig.add_trace(go.Scatter(
+            x=exceedence*100, y=sort, name='Reach {}'.format(sims[i]),
+            line=dict(color=colors[i], width=2),
+            legendgroup='Reach {}'.format(sims[i])
+            ))
+
+    for i in range(len(sims)):
+        sort = np.sort(df.iloc[:, i+len(sims)])[::-1]
+        exceedence = np.arange(1.,len(sort)+1) / len(sort)
+        fig.add_trace(go.Scatter(
+            x=exceedence*100, y=sort, mode='markers', name='Observed {}'.format(sims[i]),
+            marker=dict(color=colors[i]),
+            legendgroup='Reach {}'.format(sims[i]),
+            showlegend=False
+            ))
+    fig.update_layout(
+        # showlegend=False,
+        plot_bgcolor='white',
+        height=600,
+        # width=1200
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Exceedance Probability (%)')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Monthly Average Stream Discharge (m<sup>3</sup>/s)')
+    fig.update_layout(legend=dict(
+        yanchor="top",
+        y=1.0,
+        xanchor="center",
+        x=0.5,
+        orientation="h",
+        title='',
+    ))
+    fig.update_traces(marker=dict(size=10, opacity=0.5,
+                                line=dict(width=1,
+                                            color='white')
+                                            ),
+                    selector=dict(mode='markers'))
+    if yscale == 'Logarithmic':
+        fig.update_yaxes(type="log")
     return fig
 
 
@@ -205,4 +251,40 @@ def filedownload(df):
 
 def read_markdown_file(markdown_file):
     return Path(markdown_file).read_text()
+
+
+def viz_biomap():
+    subdf = gpd.read_file("./resources/subs1.shp")
+    subdf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+    subdf = subdf[['Subbasin', 'geometry']]
+    subdf['geometry'] = subdf['geometry'].convex_hull
+    tt = gpd.GeoDataFrame()
+    for i in subdf.index:
+        df = gpd.GeoDataFrame()
+        df['time']= [str(x)[:-9] for x in pd.date_range('1/1/2000', periods=12, freq='M')]
+        # df['time'] = [str(x) for x in range(2000, 2012)]
+        df['Subbasin'] = 'Sub{:03d}'.format(i+1)
+        df['geometry'] = subdf.loc[i, 'geometry']
+        df['value'] = [random.randint(0,12) for i in range(12)]
+        tt = pd.concat([tt, df], axis=0)   
+    tt.index = tt.Subbasin 
+    mfig = px.choropleth(tt,
+                    geojson=tt.geometry,
+                    locations=tt.index,
+                    color="value",
+                    #    projection="mercator"
+                    animation_frame="time",
+                    range_color=(0, 12),
+                    )
+    mfig.update_geos(fitbounds="locations", visible=False)
+    mfig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, height=600)
+    # offline.plot(mfig, auto_open=True, image = 'png', image_filename="map_us_crime_slider" ,image_width=2000, image_height=1000, 
+    #             filename='tt.html', validate=True)
+    # fig.update_layout(
+    #     # showlegend=False,
+    #     plot_bgcolor='white',
+    #     height=600,
+    #     # width=1200
+    # )
+    return mfig
 
