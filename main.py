@@ -63,13 +63,13 @@ if area == ws_nams[0]:
             """
             ## 1992 - 2001
             """)
-        st.markdown("---")
+        st.markdown('---')
     with col3:
         st.markdown(
             """
             ## 12, 57, 75
             """)
-        st.markdown("---")
+        st.markdown('---')
 if area == ws_nams[1]:
     with col2:
         st.markdown(
