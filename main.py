@@ -28,7 +28,12 @@ LINE = """<style>
 <div class="vl"></div>"""
 
 
-st.set_page_config(layout="wide", initial_sidebar_state='collapsed')
+st.set_page_config(
+    layout="wide",
+    initial_sidebar_state='collapsed',
+    page_title='CRB APEX-MODFLOW',
+    page_icon='icon2.png' 
+    )
 st.title('CRB APEX-MODFLOW model performance')
 st.markdown("""
 This app helps analyze CRB APEX-MODFLOW model performance.
