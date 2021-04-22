@@ -13,6 +13,7 @@ from matplotlib import cm
 import numpy as np
 from hydroeval import evaluator, nse, rmse, pbias
 import base64
+from pathlib import Path
 
 
 def get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate):
@@ -144,7 +145,9 @@ def viz_biomap():
                     )
     mfig.update_geos(fitbounds="locations", visible=False)
     mfig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    offline.plot(mfig, auto_open=True, image = 'png', image_filename="map_us_crime_slider" ,image_width=2000, image_height=1000, 
+    offline.plot(
+                mfig, auto_open=True, image = 'png',
+                image_filename="map_us_crime_slider" ,image_width=2000, image_height=1000, 
                 filename='tt.html', validate=True)
 
     st.plotly_chart(mfig, use_container_width=True)
@@ -198,3 +201,8 @@ def filedownload(df):
     b64 = base64.b64encode(csv.encode()).decode()  # strings <-> bytes conversions
     href = f'<a href="data:file/csv;base64,{b64}" download="dataframe.csv">Download CSV File</a>'
     return href
+
+
+def read_markdown_file(markdown_file):
+    return Path(markdown_file).read_text()
+

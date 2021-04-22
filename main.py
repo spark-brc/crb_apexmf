@@ -5,10 +5,6 @@ import os
 import pandas as pd
 import base64
 import numpy as np
-from utils import (
-    read_rch_files, get_variables, viz_biomap, get_sim_obd, get_plot, get_stats_df,
-    filedownload
-)
 import glob
 import utils
 
@@ -34,6 +30,7 @@ st.set_page_config(
     page_title='CRB APEX-MODFLOW',
     page_icon='icon2.png' 
     )
+
 st.title('CRB APEX-MODFLOW model performance')
 st.markdown("""
 This app helps analyze CRB APEX-MODFLOW model performance.
@@ -118,7 +115,14 @@ def main(df, sims):
     wtdf = st.beta_expander('Simulated and Observed Groundwater Level for {} APEX-MODFLOW Watershed Model'.format(area))
     mddf = st.beta_expander('{} Model Description'.format(area))
     # tdf.dataframe(df, height=500)
-        
+
+    intro_markdown = utils.read_markdown_file(
+        os.path.join("./resources/watershed", "Animas/description", "Animas APEX-MODFLOW.md")
+    )
+    mddf.markdown(intro_markdown, unsafe_allow_html=True)
+    mddf.markdown(intro_markdown, unsafe_allow_html=True)
+
+
 @st.cache
 def load_data():
     if area == ws_nams[0]:
@@ -142,7 +146,7 @@ def load_data():
         time_step ='M'
         caldate = '1/1/2010'
         eddate = '12/31/2019'        
-    df = get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate)
+    df = utils.get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate)
     
     return df, sims
 
