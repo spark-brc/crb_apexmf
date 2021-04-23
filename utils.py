@@ -166,39 +166,6 @@ def get_watershed_list():
     return ws_nams, full_paths
 
 
-def viz_biomap():
-    subdf = gpd.read_file("./resources/subs1.shp")
-    subdf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
-    subdf = subdf[['Subbasin', 'geometry']]
-    subdf['geometry'] = subdf['geometry'].convex_hull
-    tt = gpd.GeoDataFrame()
-    for i in subdf.index:
-        df = gpd.GeoDataFrame()
-        df['time']= [str(x)[:-9] for x in pd.date_range('1/1/2000', periods=12, freq='M')]
-        # df['time'] = [str(x) for x in range(2000, 2012)]
-        df['Subbasin'] = 'Sub{:03d}'.format(i+1)
-        df['geometry'] = subdf.loc[i, 'geometry']
-        df['value'] = [random.randint(0,12) for i in range(12)]
-        tt = pd.concat([tt, df], axis=0)   
-    tt.index = tt.Subbasin 
-    mfig = px.choropleth(tt,
-                    geojson=tt.geometry,
-                    locations=tt.index,
-                    color="value",
-                    #    projection="mercator"
-                    animation_frame="time",
-                    range_color=(0, 12),
-                    )
-    mfig.update_geos(fitbounds="locations", visible=False)
-    mfig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    offline.plot(
-                mfig, auto_open=True, image = 'png',
-                image_filename="map_us_crime_slider" ,image_width=2000, image_height=1000, 
-                filename='tt.html', validate=True)
-
-    st.plotly_chart(mfig, use_container_width=True)
-
-
 def read_rch_files(wd):
     # Find .dis file and read number of rows, cols, x spacing, and y spacing (not allowed to change)
     rch_files = []

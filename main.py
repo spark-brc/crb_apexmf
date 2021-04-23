@@ -99,7 +99,7 @@ if area == ws_nams[2]:
             """)
 
 
-def main(df, sims):
+def main(df, sims, mfig):
     tdf = st.beta_expander('Surface Water Simulation for {}'.format(area))
     tdf.dataframe(df, height=500)
     tdf.markdown(utils.filedownload(df), unsafe_allow_html=True)
@@ -115,16 +115,16 @@ def main(df, sims):
             """)
         st.dataframe(stats_df.T)
 
-    tcol1, tcol2 = st.beta_columns([0.5, 0.5])
+    tcol1, tcol2 = st.beta_columns([0.55, 0.45])
     tcol1.markdown("## Flow Duration Curve")
     tcol2.markdown("## Waterbalance Map (ing)")
     
-    pcol1, pcol2, pcol3= st.beta_columns([0.1, 0.4, 0.5])
+    pcol1, pcol2, pcol3= st.beta_columns([0.1, 0.45, 0.45])
     yscale = pcol1.radio("Select Y-axis scale", ["Linear", "Logarithmic"])
     pcol2.plotly_chart(utils.get_fdcplot(df, sims, yscale), use_container_width=True)
     # pcol3.image('tenor.gif')
     pcol3.plotly_chart(
-        utils.viz_biomap(),
+        mfig,
         # use_container_width=True
         )
 
@@ -164,11 +164,11 @@ def load_data():
         caldate = '1/1/2010'
         eddate = '12/31/2019'        
     df = utils.get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate)
-    
-    return df, sims
+    mfig = utils.viz_biomap()
+    return df, sims, mfig
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.CRITICAL)
-    df, sims = load_data()
-    main(df, sims)
+    df, sims, mfig= load_data()
+    main(df, sims, mfig)
