@@ -14,6 +14,66 @@ from matplotlib import cm
 from hydroeval import evaluator, nse, rmse, pbias
 import base64
 from pathlib import Path
+import datetime
+
+
+def define_sim_period(wd):
+    if os.path.isfile(os.path.join("./resources/watershed", wd, "APEXCONT.DAT")):
+        with open(os.path.join("./resources/watershed", wd, 'APEXCONT.DAT'), "r") as f:
+            data = [x.strip().split() for x in f if x.strip()]
+        numyr = int(data[0][0])
+        styr = int(data[0][1])
+        stmon = int(data[0][2])
+        stday = int(data[0][3])
+        ptcode = int(data[0][4])
+        edyr = styr + numyr -1
+        stdate = datetime.datetime(styr, stmon, 1) + datetime.timedelta(stday - 1)
+        eddate = datetime.datetime(edyr, 12, 31) 
+        duration = (eddate - stdate).days
+
+        ##### 
+        start_month = stdate.strftime("%b")
+        start_day = stdate.strftime("%d")
+        start_year = stdate.strftime("%Y")
+        end_month = eddate.strftime("%b")
+        end_day = eddate.strftime("%d")
+        end_year = eddate.strftime("%Y")
+
+        # NOTE: This is later when we are handling model with different time steps
+        # # Check IPRINT option
+        # if ptcode == 3 or ptcode == 4 or ptcode == 5:  # month
+        #     self.dlg.comboBox_SD_timeStep.clear()
+        #     self.dlg.comboBox_SD_timeStep.addItems(['Monthly', 'Annual'])
+        #     self.dlg.radioButton_month.setChecked(1)
+        #     self.dlg.radioButton_month.setEnabled(True)
+        #     self.dlg.radioButton_day.setEnabled(False)
+        #     self.dlg.radioButton_year.setEnabled(False)
+        # elif ptcode == 6 or ptcode == 7 or ptcode == 8 or ptcode == 9:
+        #     self.dlg.comboBox_SD_timeStep.clear()
+        #     self.dlg.comboBox_SD_timeStep.addItems(['Daily', 'Monthly', 'Annual'])
+        #     self.dlg.radioButton_day.setChecked(1)
+        #     self.dlg.radioButton_day.setEnabled(True)
+        #     self.dlg.radioButton_month.setEnabled(False)
+        #     self.dlg.radioButton_year.setEnabled(False)
+        # elif ptcode == 0 or ptcode == 1 or ptcode == 2:
+        #     self.dlg.comboBox_SD_timeStep.clear()
+        #     self.dlg.comboBox_SD_timeStep.addItems(['Annual'])
+        #     self.dlg.radioButton_year.setChecked(1)
+        #     self.dlg.radioButton_year.setEnabled(True)
+        #     self.dlg.radioButton_day.setEnabled(False)
+        #     self.dlg.radioButton_month.setEnabled(False)
+        return stdate, eddate
+
+
+def get_val_info(wd):
+    if os.path.isfile(os.path.join("./resources/watershed", wd, "interactive.dat")):
+        with open(os.path.join("./resources/watershed", wd, 'interactive.dat'), "r") as f:
+            data = [x.strip().split() for x in f if x.strip()]
+        valstyr = int(data[0][0])
+        valedyr = int(data[0][1])
+        sims = [int(x) for x in data[1]]
+        obds = [x for x in data[2]]
+        return valstyr, valedyr, sims, obds
 
 
 def get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate):
@@ -219,6 +279,9 @@ def filedownload(df):
 def read_markdown_file(markdown_file):
     return Path(markdown_file).read_text()
 
+
+
+    # st.markdown('<style>' + open('icons.css').read() + '</style>', unsafe_allow_html=True)
 
 def viz_biomap():
     subdf = gpd.read_file("./resources/subs1.shp")
