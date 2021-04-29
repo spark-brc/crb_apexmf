@@ -106,6 +106,7 @@ def get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate):
     tot_df = tot_df[caldate:eddate]
     return tot_df
 
+
 def get_plot(df, sims):
     fig = go.Figure()
     colors = (get_matplotlib_cmap('tab10', bins=8))
@@ -146,6 +147,7 @@ def get_plot(df, sims):
                     selector=dict(mode='markers'))
     return fig
 
+
 def get_fdcplot(df, sims, yscale):
     fig = go.Figure()
     colors = (get_matplotlib_cmap('tab10', bins=8))
@@ -171,7 +173,7 @@ def get_fdcplot(df, sims, yscale):
     fig.update_layout(
         # showlegend=False,
         plot_bgcolor='white',
-        height=600,
+        height=700,
         # width=1200
     )
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Exceedance Probability (%)')

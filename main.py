@@ -20,10 +20,7 @@ LINE = """<style>
   top: 0;
 }
 </style>
-
 <div class="vl"></div>"""
-
-
 st.set_page_config(
     layout="wide",
     initial_sidebar_state='collapsed',
@@ -62,7 +59,6 @@ with col3:
         """
         ### Streamgage station (Reach ID)
         """)
-
 with col2:
     st.markdown('## {} - {}'.format(valstyr, valedyr))
     st.markdown('---')
