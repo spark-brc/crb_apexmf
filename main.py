@@ -12,8 +12,8 @@ pd.options.mode.chained_assignment = None
 
 LINE = """<style>
 .vl {
-  border-left: 2px solid black;
-  height: 100px;
+  border-left: 2px solid #797A7D;
+  height: 250px;
   position: absolute;
   left: 50%;
   margin-left: -3px;
@@ -36,62 +36,64 @@ This app helps analyze CRB APEX-MODFLOW model performance.
 """)
 
 ws_nams, full_paths = utils.get_watershed_list()
-col1, line, col2, col3, col4 = st.beta_columns([0.2, 0.05, 0.1, 0.15, 0.2])
+# col1, line, col2, col3, col4 = st.columns([0.2, 0.05, 0.1, 0.15, 0.2])
+col1, line, col2= st.columns([0.45, 0.05, 0.45])
 
 area = col1.selectbox(
     "Select Watershed", ws_nams
     )
-stdate, eddate = utils.define_sim_period(area)
-valstyr, valedyr, sims, obds = utils.get_val_info(area)
+stdate, eddate, start_year, end_year = utils.define_sim_period(area)
+calstyr, caledyr, sims, obds, gw_sims, gw_obds = utils.get_val_info(area)
+
 
 with line:
     st.markdown(LINE, unsafe_allow_html=True)
-with col2:
+with col1:
     # st.markdown(
     #     "<h3 style='text-align: center;'>Simulation period</h3>",
     #     unsafe_allow_html=True)
     st.markdown(
-        """
-        ### Simulation period
-        """)
-with col3:
-    st.markdown(
-        """
-        ### Streamgage station (Reach ID)
-        """)
+        '**Simulation period**: &nbsp;{} - {}&emsp;|&emsp;**Calibrated ** from {} - {}&nbsp;'.format(start_year, end_year, calstyr, caledyr))
+    st.markdown('---')
+
+with col1:
+    st.markdown('**Streamgage station** (Reach ID):&nbsp; {}'.format(", ".join([str(x) for x in sims])))
+    st.markdown('---')
+
 with col2:
-    st.markdown('## {} - {}'.format(valstyr, valedyr))
-    st.markdown('---')
-with col3:
-    st.markdown('## {}'.format(", ".join([str(x) for x in sims])))
-    st.markdown('---')
+    sim_range = st.slider(
+        "Set Analysis Period:",
+        min_value=int(start_year),
+        max_value=int(end_year), value=(int(calstyr),int(caledyr)))
 
-
-def main(df, sims, mfig):
-    tdf = st.beta_expander('{} Dataframe for Simulated and Observed Stream Discharge'.format(area))
+def main(df, sims, mfig, gwdf):
+    tdf = st.expander('{} Dataframe for Simulated and Observed Stream Discharge'.format(area))
     tdf.dataframe(df, height=500)
     tdf.markdown(utils.filedownload(df), unsafe_allow_html=True)
+    # utils.viz_perfomance_map(area)
+
     st.markdown("## Hydrographs for stream discharge")
+    
     st.plotly_chart(utils.get_plot(df, sims), use_container_width=True)
     stats_df = utils.get_stats_df(df, sims)
 
-    with col4:
+    with col2:
         st.markdown(
             """
             ### Objective Functions
             """)
         st.dataframe(stats_df.T)
 
-    tcol1, tcol2 = st.beta_columns([0.55, 0.45])
+    tcol1, tcol2 = st.columns([0.55, 0.45])
     tcol1.markdown("## Flow Duration Curve")
 
     
-    pcol1, pcol2= st.beta_columns([0.1, 0.9])
+    pcol1, pcol2= st.columns([0.1, 0.9])
     yscale = pcol1.radio("Select Y-axis scale", ["Linear", "Logarithmic"])
     pcol2.plotly_chart(utils.get_fdcplot(df, sims, yscale), use_container_width=True)
     # pcol3.image('tenor.gif')
     
-    wb = st.beta_expander('Waterbalance Map (ing)')
+    wb = st.expander('Waterbalance Map (ing)')
     wb.image('tenor.gif')
 
     # NOTE: water balance map in progress
@@ -101,9 +103,14 @@ def main(df, sims, mfig):
     #     use_container_width=True
     #     )
 
-    wtdf = st.beta_expander('Groundwater Simulation for {}'.format(area))
+    wtdf = st.expander('Groundwater Simulation for {}'.format(area))
     wtdf.image('tenor.gif')
-    mddf = st.beta_expander('{} Model Description'.format(area))
+    gwcol1, gwcol2= st.columns([0.5, 0.5])
+
+
+
+
+    mddf = st.expander('{} Model Description'.format(area))
     # tdf.dataframe(df, height=500)
 
     intro_markdown = utils.read_markdown_file(
@@ -111,20 +118,27 @@ def main(df, sims, mfig):
     )
     mddf.markdown(intro_markdown, unsafe_allow_html=True)
     # mddf.markdown(intro_markdown, unsafe_allow_html=True)
+    tgwdf = st.expander('{} Dataframe for Simulated and Observed Stream Discharge'.format(area))
+    tgwdf.dataframe(gwdf, height=800)
+    gwcol1.plotly_chart(utils.gw_scatter(gwdf),  use_container_width=True)
+    gwcol2.plotly_chart(utils.gw_scatter2(gwdf),  use_container_width=True)
+
+
 
 
 @st.cache
 def load_data():
     time_step = 'M'
-    caldate = '1/1/{}'.format(valstyr)
-    eddate = '12/31/{}'.format(valedyr)
+    caldate = '1/1/{}'.format(sim_range[0])
+    eddate = '12/31/{}'.format(sim_range[1])
 
     df = utils.get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate)
     mfig = utils.viz_biomap()
-    return df, sims, mfig
+    gwdf = utils.tot_wt(area, stdate, caldate, eddate, gw_sims, gw_obds, time_step=None)
+    return df, sims, mfig, gwdf
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.CRITICAL)
-    df, sims, mfig= load_data()
-    main(df, sims, mfig)
+    df, sims, mfig, gwdf = load_data()
+    main(df, sims, mfig, gwdf)

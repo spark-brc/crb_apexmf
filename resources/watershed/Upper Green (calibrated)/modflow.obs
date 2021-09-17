@@ -1,0 +1,25 @@
+# modflow.obs file is created by APEXMOD plugin version 1.0.- 07/05/21 11:11:06 -
+23	                # Number of observation cells
+37	31	1	4243	2272.34	# Row, Col, Layer, grid_id, elevation 
+40	46	1	4609	2229.13	# Row, Col, Layer, grid_id, elevation 
+44	39	1	5070	2194.28	# Row, Col, Layer, grid_id, elevation 
+46	50	1	5315	2187.07	# Row, Col, Layer, grid_id, elevation 
+46	51	1	5316	2199.11	# Row, Col, Layer, grid_id, elevation 
+47	50	1	5432	2180.00	# Row, Col, Layer, grid_id, elevation 
+56	56	1	6491	2125.55	# Row, Col, Layer, grid_id, elevation 
+59	66	1	6852	2244.41	# Row, Col, Layer, grid_id, elevation 
+62	42	1	7179	2137.17	# Row, Col, Layer, grid_id, elevation 
+66	32	1	7637	2101.24	# Row, Col, Layer, grid_id, elevation 
+84	40	1	9751	2199.20	# Row, Col, Layer, grid_id, elevation 
+85	61	1	9889	2110.09	# Row, Col, Layer, grid_id, elevation 
+103	67	1	12001	2023.30	# Row, Col, Layer, grid_id, elevation 
+105	64	1	12232	2010.11	# Row, Col, Layer, grid_id, elevation 
+109	65	1	12701	2016.79	# Row, Col, Layer, grid_id, elevation 
+140	70	1	16333	1972.19	# Row, Col, Layer, grid_id, elevation 
+140	71	1	16334	1949.73	# Row, Col, Layer, grid_id, elevation 
+141	70	1	16450	1958.45	# Row, Col, Layer, grid_id, elevation 
+141	71	1	16451	1939.99	# Row, Col, Layer, grid_id, elevation 
+143	71	1	16685	1920.65	# Row, Col, Layer, grid_id, elevation 
+146	71	1	17036	1916.79	# Row, Col, Layer, grid_id, elevation 
+148	57	1	17256	1871.82	# Row, Col, Layer, grid_id, elevation 
+148	58	1	17257	1881.02	# Row, Col, Layer, grid_id, elevation 

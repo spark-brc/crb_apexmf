@@ -15,6 +15,7 @@ from hydroeval import evaluator, nse, rmse, pbias
 import base64
 from pathlib import Path
 import datetime
+import statsmodels.api as sm
 
 
 def define_sim_period(wd):
@@ -36,7 +37,7 @@ def define_sim_period(wd):
         start_day = stdate.strftime("%d")
         start_year = stdate.strftime("%Y")
         end_month = eddate.strftime("%b")
-        end_day = eddate.strftime("%d")
+        end_day = eddate.strftime("%d") 
         end_year = eddate.strftime("%Y")
 
         # NOTE: This is later when we are handling model with different time steps
@@ -62,18 +63,20 @@ def define_sim_period(wd):
         #     self.dlg.radioButton_year.setEnabled(True)
         #     self.dlg.radioButton_day.setEnabled(False)
         #     self.dlg.radioButton_month.setEnabled(False)
-        return stdate, eddate
+        return stdate, eddate, start_year, end_year
 
 
 def get_val_info(wd):
     if os.path.isfile(os.path.join("./resources/watershed", wd, "interactive.dat")):
         with open(os.path.join("./resources/watershed", wd, 'interactive.dat'), "r") as f:
             data = [x.strip().split() for x in f if x.strip()]
-        valstyr = int(data[0][0])
-        valedyr = int(data[0][1])
+        calstyr = int(data[0][0])
+        caledyr = int(data[0][1])
         sims = [int(x) for x in data[1]]
         obds = [x for x in data[2]]
-        return valstyr, valedyr, sims, obds
+        gw_sims = [int(x) for x in data[3]]
+        gw_obds = [x for x in data[4]]
+        return calstyr, caledyr, sims, obds, gw_sims, gw_obds
 
 
 def get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate):
@@ -87,7 +90,7 @@ def get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate):
                     index_col=0)
     df = df.loc["REACH"]
     str_obd = pd.read_csv(
-                        os.path.join("./resources/watershed", area, 'streamflow.obd'),
+                        os.path.join("./resources/watershed", area, 'stf_mon.obd'),
                         sep=r'\s+', index_col=0, header=0,
                         parse_dates=True, delimiter="\t",
                         na_values=[-999, ""]
@@ -132,19 +135,23 @@ def get_plot(df, sims):
     )
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='')
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Monthly Average Stream Discharge (m<sup>3</sup>/s)')
-    fig.update_layout(legend=dict(
-        yanchor="top",
-        y=1.0,
-        xanchor="center",
-        x=0.5,
-        orientation="h",
-        title='',
-    ))
+    fig.update_layout(
+            legend=dict(
+                yanchor="top",
+                y=1.0,
+                xanchor="center",
+                x=0.5,
+                orientation="h",
+                title='',),
+            hovermode= "x unified"
+            )
     fig.update_traces(marker=dict(size=10, opacity=0.5,
                                 line=dict(width=1,
                                             color='white')
                                             ),
-                    selector=dict(mode='markers'))
+                    selector=dict(mode='markers'),
+                    # hovertemplate=None
+                    )
     return fig
 
 
@@ -178,14 +185,16 @@ def get_fdcplot(df, sims, yscale):
     )
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Exceedance Probability (%)')
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Monthly Average Stream Discharge (m<sup>3</sup>/s)')
-    fig.update_layout(legend=dict(
-        yanchor="top",
-        y=1.0,
-        xanchor="center",
-        x=0.5,
-        orientation="h",
-        title='',
-    ))
+    fig.update_layout(
+        legend=dict(
+            yanchor="top",
+            y=1.0,
+            xanchor="center",
+            x=0.5,
+            orientation="h",
+            title='',
+            ),
+        hovermode= "x unified")
     fig.update_traces(marker=dict(size=10, opacity=0.5,
                                 line=dict(width=1,
                                             color='white')
@@ -229,7 +238,6 @@ def get_watershed_list():
 
 
 def read_rch_files(wd):
-    # Find .dis file and read number of rows, cols, x spacing, and y spacing (not allowed to change)
     rch_files = []
     for filename in glob.glob(wd+"/*.RCH"):
         rch_files.append(os.path.basename(filename))
@@ -281,8 +289,6 @@ def filedownload(df):
 def read_markdown_file(markdown_file):
     return Path(markdown_file).read_text()
 
-
-
     # st.markdown('<style>' + open('icons.css').read() + '</style>', unsafe_allow_html=True)
 
 def viz_biomap():
@@ -320,3 +326,227 @@ def viz_biomap():
     # )
     return mfig
 
+
+def viz_perfomance_map(area):
+    subdf = gpd.read_file(os.path.join("./resources/watershed", area, 'sub_dis.shp'))
+    subdf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+    subdf = subdf[['Id', 'geometry']]
+    st.write(subdf.centroid.y[0])
+    subdf.index = subdf.Id
+    # fig = go.Figure()
+    mfig = px.choropleth_mapbox(subdf,
+                    geojson=subdf.geometry,
+                    locations=subdf.index,
+                    # color=sel_yr,
+                    mapbox_style="open-street-map",
+                    zoom=8,
+                    center = {"lat":subdf.centroid.y[0], "lon": subdf.centroid.x[0]},
+                    # range_color=(dfmin, dfmax),
+                    # opacity=0.3,
+                    )
+    mfig.update_geos(fitbounds="locations", visible=False)
+    mfig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, height=1000)
+
+    stf_gages = gpd.read_file(os.path.join("./resources/watershed", area, 'stf_gages.shp'))
+    stf_gages.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+    # stf_gages = stf_gages[['subids', 'geometry']]
+    stf_gages.index = stf_gages.subids
+
+    gfig = px.scatter(
+                    stf_gages,
+                    y=stf_gages.geometry.y,
+                    x=stf_gages.geometry.x,
+
+                    # geojson=stf_gages.geometry,
+                    # locations=stf_gages.index
+                    # color=sel_yr,
+                    # mapbox_style="open-street-map",
+                    # zoom=8,
+                    # center = {"lat":subdf.centroid.y[0], "lon": subdf.centroid.x[0]},
+                    # range_color=(dfmin, dfmax),
+                    # opacity=0.3,
+                    )
+    mfig.add_traces(gfig.data)
+    # ffig = [mfig, gfig]
+    # fig.add_trace(gfig)
+    # for i, frame in enumerate(mfig.frames):
+    #     mfig.frames[i].data += (gfig.frames[i].data[0],)
+    # fig.show()
+    st.plotly_chart(gfig, use_container_width=True)
+
+
+# def get_gw_info():
+
+
+def wt_df(wd, start_date, grid_id, obd_nam):
+    mf_obs = pd.read_csv(
+                        os.path.join("./resources/watershed", wd, "modflow.obs"),
+                        delim_whitespace=True,
+                        skiprows = 2,
+                        usecols = [3, 4],
+                        index_col = 0,
+                        names = ["grid_id", "mf_elev"],)
+    mfobd_df = pd.read_csv(
+                        os.path.join("./resources/watershed", wd, "dtw_day.obd"),
+                        sep='\s+',
+                        index_col=0,
+                        header=0,
+                        parse_dates=True,
+                        na_values=[-999, ""],
+                        delimiter="\t")
+
+    grid_id_lst = mf_obs.index.astype(str).values.tolist()
+
+    output_wt = pd.read_csv(
+                        os.path.join("./resources/watershed", wd, "apexmf_out_MF_obs"),
+                        delim_whitespace=True,
+                        skiprows = 1,
+                        names = grid_id_lst,)
+    output_wt = output_wt[str(grid_id)] - float(mf_obs.loc[int(grid_id)])
+    output_wt.index = pd.date_range(start_date, periods=len(output_wt))
+
+    
+    output_wt = pd.concat([output_wt, mfobd_df[obd_nam]], axis=1)
+    output_wt = output_wt[output_wt[str(grid_id)].notna()]
+    return output_wt
+
+
+def tot_wt(area, stdate, cal_start, cal_end, grid_ids, obd_nams, time_step=None):
+    """combine all groundwater outputs to provide a dataframe for 1 to 1 plot
+
+    Args:
+        start_date (str): simulation start date 
+        grid_ids (list): list of grid ids used for plot
+        obd_nams (list): list of column names in observed data and in accordance with grid ids
+        time_step (str, optional): simulation time step (day, month, annual). Defaults to None.
+
+    Returns:
+        dataframe: dataframe for all simulated groundwater levels and observed data
+    """
+    if time_step is None:
+        time_step = "D"
+        mfobd_file = "dtw_day.obd"
+    else:
+        time_step = "M"
+        mfobd_file = "modflow_month.obd."
+    # read obs and obd files to get grid ids, elev, and observed values
+    mf_obs = pd.read_csv(
+                        os.path.join("./resources/watershed", area, "modflow.obs"),
+                        delim_whitespace=True,
+                        skiprows = 2,
+                        usecols = [3, 4],
+                        index_col = 0,
+                        names = ["grid_id", "mf_elev"],)
+    mfobd_df = pd.read_csv(
+                        os.path.join("./resources/watershed", area, mfobd_file),
+                        sep='\s+',
+                        index_col=0,
+                        header=0,
+                        parse_dates=True,
+                        na_values=[-999, ""],
+                        delimiter="\t")
+    grid_id_lst = mf_obs.index.astype(str).values.tolist()
+    # read simulated water elevation
+    output_wt = pd.read_csv(
+                        os.path.join("./resources/watershed", area, "apexmf_out_MF_obs"),
+                        delim_whitespace=True,
+                        skiprows = 1,
+                        names = grid_id_lst,)
+    # append data to big dataframe
+
+    tot_df = pd.DataFrame()
+    for grid_id, obd_nam in zip(grid_ids, obd_nams):
+        # df = output_wt[str(grid_id)] - float(mf_obs.loc[int(grid_id)]) # calculate depth to water
+        df = output_wt[str(grid_id)]
+        df.index = pd.date_range(stdate, periods=len(df))
+        df = df[cal_start:cal_end]
+        if time_step == 'M':
+            df = df.resample('M').mean()
+        # mfobd_df = float(mf_obs.loc[int(grid_id)]) + mfobd_df[obd_nam]
+        mfobd_dff = mfobd_df[obd_nam] + float(mf_obs.loc[int(grid_id)])
+        df = pd.concat([df, mfobd_dff], axis=1) # concat sim with obd
+        df = df.dropna() # drop nan
+        new_cols ={x:y for x, y in zip(df.columns, ['sim', 'obd'])} #replace col nams with new nams
+        df['grid_id'] = str(grid_id)
+        tot_df = tot_df.append(df.rename(columns=new_cols))
+    return tot_df
+
+def gw_scatter(gwdf):
+
+    fig = go.Figure()
+    colors = (get_matplotlib_cmap('tab10', bins=8))
+    # fig = px.scatter(gwdf, x="sim", y="obd", color="grid_id",trendline="ols")
+    fig = px.scatter(gwdf, x="sim", y="obd", color="grid_id", trendline="ols", trendline_scope="overall")
+
+    # # linear regression
+    # regline = sm.OLS(gwdf["sim"], sm.add_constant(gwdf["obd"])).fit().fittedvalues
+
+    # # add linear regression line for whole sample
+    # fig.add_traces(go.Scatter(x=gwdf["sim"], y=regline,
+    #                         mode = 'lines',
+    #                         # marker_color='black',
+    #                         name='trend all',
+    #                         # trendline_scope="overall"
+    #                         )
+    #                         )
+
+    fig.update_layout(
+        # showlegend=False,
+        plot_bgcolor='white',
+        height=700,
+        # width=1200
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Simulated Groundwater Level (meters)')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Observed Groundwater Level (meters)')
+    fig.update_layout(
+        legend=dict(
+            yanchor="top",
+            y=1.0,
+            xanchor="center",
+            x=0.5,
+            orientation="h",
+            title='',
+            ),
+        hovermode= "x unified")
+
+    return fig
+
+def gw_scatter2(gwdf):
+
+    fig = go.Figure()
+    colors = (get_matplotlib_cmap('tab10', bins=8))
+    fig = px.scatter(gwdf, x="sim", y="obd", color="grid_id",trendline="ols")
+    # fig = px.scatter(gwdf, x="sim", y="obd", color="grid_id", trendline="ols", trendline_scope="overall")
+
+    # # linear regression
+    # regline = sm.OLS(gwdf["sim"], sm.add_constant(gwdf["obd"])).fit().fittedvalues
+
+    # # add linear regression line for whole sample
+    # fig.add_traces(go.Scatter(x=gwdf["sim"], y=regline,
+    #                         mode = 'lines',
+    #                         # marker_color='black',
+    #                         name='trend all',
+    #                         # trendline_scope="overall"
+    #                         )
+    #                         )
+
+    fig.update_layout(
+        # showlegend=False,
+        plot_bgcolor='white',
+        height=700,
+        # width=1200
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Simulated Groundwater Level (meters)')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Observed Groundwater Level (meters)')
+    fig.update_layout(
+        legend=dict(
+            yanchor="top",
+            y=1.0,
+            xanchor="center",
+            x=0.5,
+            orientation="h",
+            title='',
+            ),
+        hovermode= "x unified")
+
+    return fig
