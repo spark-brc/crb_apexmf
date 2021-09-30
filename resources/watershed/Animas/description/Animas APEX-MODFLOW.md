@@ -24,7 +24,7 @@ An Animas MODFLOW model has been created and linked with its APEX model. More de
 ### 1.3.1 Steady-State MODFLOW Results
 Results from a steady-state MODFLOW simulation can provide insights for evaluating the model construction and initial model inputs (parameters, initial hydraulic heads) to a transient APEX-MODFLOW model.
 ![[ani_ssmf_results.png]]
-![](https://github.com/spark-brc/crb_apexmf/blob/main/resources/watershed/Animas/description/ani_model_inputs.png)
+![](https://github.com/spark-brc/crb_apexmf/blob/main/resources/watershed/Animas/description/ani_model_inputs.png?raw=true)
 - Figure 2. Maps of simulation results from the steady-state MODFLOW model 
 
 ## 1.4. APEX-MODFLOW model 
