@@ -13,7 +13,7 @@ pd.options.mode.chained_assignment = None
 LINE = """<style>
 .vl {
   border-left: 2px solid #797A7D;
-  height: 250px;
+  height: 400px;
   position: absolute;
   left: 50%;
   margin-left: -3px;
@@ -37,18 +37,22 @@ This app helps analyze CRB APEX-MODFLOW model performance.
 
 ws_nams, full_paths = utils.get_watershed_list()
 # col1, line, col2, col3, col4 = st.columns([0.2, 0.05, 0.1, 0.15, 0.2])
-col1, line, col2= st.columns([0.45, 0.05, 0.45])
+col1, line, col2= st.columns([0.5, 0.05, 0.45])
 
-area = col1.selectbox(
+
+area = col2.selectbox(
     "Select Watershed", ws_nams
     )
 stdate, eddate, start_year, end_year = utils.define_sim_period(area)
 calstyr, caledyr, sims, obds, gw_sims, gw_obds = utils.get_val_info(area)
 
 
+with col1:
+    st.plotly_chart(utils.loc_map(area), use_container_width=True)
+
 with line:
     st.markdown(LINE, unsafe_allow_html=True)
-with col1:
+with col2:
     # st.markdown(
     #     "<h3 style='text-align: center;'>Simulation period</h3>",
     #     unsafe_allow_html=True)
@@ -56,7 +60,7 @@ with col1:
         '**Simulation period**: &nbsp;{} - {}&emsp;|&emsp;**Calibrated ** from {} - {}&nbsp;'.format(start_year, end_year, calstyr, caledyr))
     st.markdown('---')
 
-with col1:
+with col2:
     st.markdown('**Streamgage station** (Reach ID):&nbsp; {}'.format(", ".join([str(x) for x in sims])))
     st.markdown('---')
 
@@ -66,7 +70,7 @@ with col2:
         min_value=int(start_year),
         max_value=int(end_year), value=(int(calstyr),int(caledyr)))
 
-def main(df, sims, mfig, gwdf):
+def main(df, sims, gwdf):
     tdf = st.expander('{} Dataframe for Simulated and Observed Stream Discharge'.format(area))
     tdf.dataframe(df, height=500)
     tdf.markdown(utils.filedownload(df), unsafe_allow_html=True)
@@ -92,6 +96,11 @@ def main(df, sims, mfig, gwdf):
     yscale = pcol1.radio("Select Y-axis scale", ["Linear", "Logarithmic"])
     pcol2.plotly_chart(utils.get_fdcplot(df, sims, yscale), use_container_width=True)
     # pcol3.image('tenor.gif')
+    st.markdown("## Groundwater Levels (Depth to water)")
+    gwcol1, gwspace, gwcol2= st.columns([0.45, 0.1, 0.45])
+    gwcol1.plotly_chart(utils.gw_scatter(gwdf),  use_container_width=True)
+    gwcol2.dataframe(gwdf, height=600)
+    gwcol2.markdown(utils.gwfiledownload(gwdf), unsafe_allow_html=True)
     
     wb = st.expander('Waterbalance Map (ing)')
     wb.image('tenor.gif')
@@ -103,13 +112,6 @@ def main(df, sims, mfig, gwdf):
     #     use_container_width=True
     #     )
 
-    wtdf = st.expander('Groundwater Simulation for {}'.format(area))
-    wtdf.image('tenor.gif')
-    gwcol1, gwcol2= st.columns([0.5, 0.5])
-
-
-
-
     mddf = st.expander('{} Model Description'.format(area))
     # tdf.dataframe(df, height=500)
 
@@ -118,12 +120,7 @@ def main(df, sims, mfig, gwdf):
     )
     mddf.markdown(intro_markdown, unsafe_allow_html=True)
     # mddf.markdown(intro_markdown, unsafe_allow_html=True)
-    tgwdf = st.expander('{} Dataframe for Simulated and Observed Stream Discharge'.format(area))
-    tgwdf.dataframe(gwdf, height=800)
-    gwcol1.plotly_chart(utils.gw_scatter(gwdf),  use_container_width=True)
-    gwcol2.plotly_chart(utils.gw_scatter2(gwdf),  use_container_width=True)
-
-
+    
 
 
 @st.cache
@@ -133,12 +130,12 @@ def load_data():
     eddate = '12/31/{}'.format(sim_range[1])
 
     df = utils.get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate)
-    mfig = utils.viz_biomap()
-    gwdf = utils.tot_wt(area, stdate, caldate, eddate, gw_sims, gw_obds, time_step=None)
-    return df, sims, mfig, gwdf
+    # mfig = utils.viz_biomap()
+    gwdf = utils.tot_dtw(area, stdate, caldate, eddate, gw_sims, gw_obds, time_step=None)
+    return df, sims, gwdf
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.CRITICAL)
-    df, sims, mfig, gwdf = load_data()
-    main(df, sims, mfig, gwdf)
+    df, sims, gwdf = load_data()
+    main(df, sims, gwdf)
