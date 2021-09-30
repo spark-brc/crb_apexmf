@@ -111,14 +111,15 @@ def main(df, sims, gwdf):
     #     mfig,
     #     use_container_width=True
     #     )
-
-    mddf = st.expander('{} Model Description'.format(area))
+    mdcoll, mdmain, mdcolr = st.columns([0.1, 0.8, 0.1])
+    mdmain = mdmain.expander('{} Model Description'.format(area))
     # tdf.dataframe(df, height=500)
 
     intro_markdown = utils.read_markdown_file(
         os.path.join("./resources/watershed", "Animas/description", "Animas APEX-MODFLOW.md")
     )
-    mddf.markdown(intro_markdown, unsafe_allow_html=True)
+    mdmain.markdown(intro_markdown, unsafe_allow_html=True)
+
     # mddf.markdown(intro_markdown, unsafe_allow_html=True)
     
 
