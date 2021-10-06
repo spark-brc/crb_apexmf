@@ -1,9 +1,11 @@
-hydroeval==0.1.0
-matplotlib==3.4.2
-streamlit==0.88.0
+streamlit==0.89.0
+numpy==1.20.3
 pandas==1.2.5
-pyproj==3.2.0
-numpy==1.21.2
-plotly==5.3.1
+hydroeval==0.1.0
+hydralit==1.0.9
 geopandas==0.9.0
+plotly==5.3.1
+pyproj==3.2.1
+matplotlib==3.4.2
 statsmodels==0.12.2
+hydralit_components==1.0.4
