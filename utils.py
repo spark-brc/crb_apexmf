@@ -93,8 +93,10 @@ def get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate):
     df = df.loc["REACH"]
     str_obd = pd.read_csv(
                         os.path.join("./resources/watershed", area, 'stf_mon.obd'),
-                        sep=r'\s+', index_col=0, header=0,
-                        parse_dates=True, delimiter="\t",
+                        # sep=r'\s+',
+                        index_col=0, header=0,
+                        parse_dates=True, 
+                        delimiter="\t",
                         na_values=[-999, ""]
                         )
     str_obd = str_obd[obds]
@@ -439,7 +441,7 @@ def wt_df(wd, start_date, grid_id, obd_nam):
                         names = ["grid_id", "mf_elev"],)
     mfobd_df = pd.read_csv(
                         os.path.join("./resources/watershed", wd, "dtw_day.obd"),
-                        sep='\s+',
+                        # sep='\s+',
                         index_col=0,
                         header=0,
                         parse_dates=True,
@@ -490,7 +492,7 @@ def tot_wt(area, stdate, cal_start, cal_end, grid_ids, obd_nams, time_step=None)
                         names = ["grid_id", "mf_elev"],)
     mfobd_df = pd.read_csv(
                         os.path.join("./resources/watershed", area, mfobd_file),
-                        sep='\s+',
+                        # sep='\s+',
                         index_col=0,
                         header=0,
                         parse_dates=True,
@@ -552,7 +554,7 @@ def tot_dtw(area, stdate, cal_start, cal_end, grid_ids, obd_nams, time_step=None
                         names = ["grid_id", "mf_elev"],)
     mfobd_df = pd.read_csv(
                         os.path.join("./resources/watershed", area, mfobd_file),
-                        sep='\s+',
+                        # sep='\s+',
                         index_col=0,
                         header=0,
                         parse_dates=True,

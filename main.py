@@ -7,136 +7,182 @@ import base64
 import numpy as np
 import glob
 import utils
+from hydralit import HydraApp
+import apps
 
 pd.options.mode.chained_assignment = None
 
-LINE = """<style>
-.vl {
-  border-left: 2px solid #797A7D;
-  height: 400px;
-  position: absolute;
-  left: 50%;
-  margin-left: -3px;
-  top: 0;
-}
-</style>
-<div class="vl"></div>"""
 st.set_page_config(
     layout="wide",
-    initial_sidebar_state='collapsed',
+    initial_sidebar_state='auto',
     page_title='CRB APEX-MODFLOW',
-    page_icon='icon2.png' 
+    page_icon='icon2.png',
     )
 
-st.title('CRB APEX-MODFLOW model performance')
-st.markdown("""
-This app helps analyze CRB APEX-MODFLOW model performance.
-- **Main Python libraries:** base64, pandas, streamlit, plotly, geopandas
-- **Source code:** [github.com/spark-brc/crb_apexmf](https://github.com/spark-brc/crb_apexmf)
-""")
+footer="""<style>
+a:link , a:visited{
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
 
-ws_nams, full_paths = utils.get_watershed_list()
-# col1, line, col2, col3, col4 = st.columns([0.2, 0.05, 0.1, 0.15, 0.2])
-col1, line, col2= st.columns([0.5, 0.05, 0.45])
+a:hover,  a:active {
+color: red;
+background-color: transparent;
+text-decoration: underline;
+}
+.footer {
+position: fixed;
+display:inline;
+bottom: 0;
+width: 170px;
+background-color: transparent;
+color: black;
+text-align: center;
+padding-bottom:140px;
+}
+</style>
+<div class="footer">
+<p>Developed by <a style='display: block; text-align: center;' href="https://www.heflin.dev/" target="_blank">Seonggyu Park</a></p>
+</div>
+"""
 
-
-area = col2.selectbox(
-    "Select Watershed", ws_nams
-    )
-stdate, eddate, start_year, end_year = utils.define_sim_period(area)
-calstyr, caledyr, sims, obds, gw_sims, gw_obds = utils.get_val_info(area)
-
-
-with col1:
-    st.plotly_chart(utils.loc_map(area), use_container_width=True)
-
-with line:
-    st.markdown(LINE, unsafe_allow_html=True)
-with col2:
-    # st.markdown(
-    #     "<h3 style='text-align: center;'>Simulation period</h3>",
-    #     unsafe_allow_html=True)
-    st.markdown(
-        '**Simulation period**: &nbsp;{} - {}&emsp;|&emsp;**Calibrated ** from {} - {}&nbsp;'.format(start_year, end_year, calstyr, caledyr))
-    st.markdown('---')
-
-with col2:
-    st.markdown('**Streamgage station** (Reach ID):&nbsp; {}'.format(", ".join([str(x) for x in sims])))
-    st.markdown('---')
-
-with col2:
-    sim_range = st.slider(
-        "Set Analysis Period:",
-        min_value=int(start_year),
-        max_value=int(end_year), value=(int(calstyr),int(caledyr)))
-
-def main(df, sims, gwdf):
-    tdf = st.expander('{} Dataframe for Simulated and Observed Stream Discharge'.format(area))
-    tdf.dataframe(df, height=500)
-    tdf.markdown(utils.filedownload(df), unsafe_allow_html=True)
-    # utils.viz_perfomance_map(area)
-
-    st.markdown("## Hydrographs for stream discharge")
-    
-    st.plotly_chart(utils.get_plot(df, sims), use_container_width=True)
-    stats_df = utils.get_stats_df(df, sims)
-
-    with col2:
-        st.markdown(
-            """
-            ### Objective Functions
-            """)
-        st.dataframe(stats_df.T)
-
-    tcol1, tcol2 = st.columns([0.55, 0.45])
-    tcol1.markdown("## Flow Duration Curve")
-
-    
-    pcol1, pcol2= st.columns([0.1, 0.9])
-    yscale = pcol1.radio("Select Y-axis scale", ["Linear", "Logarithmic"])
-    pcol2.plotly_chart(utils.get_fdcplot(df, sims, yscale), use_container_width=True)
-    # pcol3.image('tenor.gif')
-    st.markdown("## Groundwater Levels (Depth to water)")
-    gwcol1, gwspace, gwcol2= st.columns([0.45, 0.1, 0.45])
-    gwcol1.plotly_chart(utils.gw_scatter(gwdf),  use_container_width=True)
-    gwcol2.dataframe(gwdf, height=600)
-    gwcol2.markdown(utils.gwfiledownload(gwdf), unsafe_allow_html=True)
-    
-    wb = st.expander('Waterbalance Map (ing)')
-    wb.image('tenor.gif')
-
-    # NOTE: water balance map in progress
-    # st.markdown("## Waterbalance Map (ing)")
-    # st.plotly_chart(
-    #     mfig,
-    #     use_container_width=True
-    #     )
-    mdcoll, mdmain, mdcolr = st.columns([0.1, 0.8, 0.1])
-    mdmain = mdmain.expander('{} Model Description'.format(area))
-    # tdf.dataframe(df, height=500)
-
-    intro_markdown = utils.read_markdown_file(
-        os.path.join("./resources/watershed", "Animas/description", "Animas APEX-MODFLOW.md")
-    )
-    mdmain.markdown(intro_markdown, unsafe_allow_html=True)
-
-    # mddf.markdown(intro_markdown, unsafe_allow_html=True)
-    
+# st.sidebar.markdown(footer,unsafe_allow_html=True)
 
 
-@st.cache
-def load_data():
-    time_step = 'M'
-    caldate = '1/1/{}'.format(sim_range[0])
-    eddate = '12/31/{}'.format(sim_range[1])
-
-    df = utils.get_sim_obd(area, stdate, time_step, sims, obds, caldate, eddate)
-    # mfig = utils.viz_biomap()
-    gwdf = utils.tot_dtw(area, stdate, caldate, eddate, gw_sims, gw_obds, time_step=None)
-    return df, sims, gwdf
-
+LOGO_IMAGE = "./resources/TAMUAgriLifeResearchLogo.png"
+LOGO_IMAGE2 = "./resources/blm-logo.png"
+st.sidebar.markdown(
+    """
+    <style>
+    .container {
+        display: flex;
+    }
+    .logo-text {
+        font-weight:700 !important;
+        font-size:50px !important;
+        color: #f9a01b !important;
+        padding-top: 75px !important;
+    }
+    .logo-img {
+        z-index: 1;
+        display:inline;
+        position:fixed;
+        bottom:0;
+        padding-bottom:45px;
+        width:120px;
+        background-color: transparent;
+        margin-left:25px;
+    }
+        .logo-img2 {
+        z-index: 1;
+        display:inline;
+        position:fixed;
+        bottom:0;
+        margin-left:150px;
+        padding-bottom:25px;
+        width:90px;
+        background-color: transparent;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.CRITICAL)
-    df, sims, gwdf = load_data()
-    main(df, sims, gwdf)
+    #---ONLY HERE TO SHOW OPTIONS WITH HYDRALIT - NOT REQUIRED, use Hydralit constructor parameters.
+
+    ws_nams, full_paths = utils.get_watershed_list()
+    # Create Radio Buttons
+
+    area = st.sidebar.radio('Select Watershed', ws_nams)
+    st.markdown(
+        f'''
+            <style>
+                .sidebar .sidebar-content {{
+                    width: 1px;
+                }}
+            </style>
+        ''',
+        unsafe_allow_html=True
+)
+    # st.sidebar.markdown("""<br><br><br><br>""", unsafe_allow_html=True)
+    # st.sidebar.image('./resources/TAMUAgriLifeResearchLogo.png',width=200)
+    # st.sidebar.image('./resources/blm-logo.png', width=200)
+    # st.markdown(footer,unsafe_allow_html=True)
+
+    over_theme = {'txc_inactive': '#FFFFFF'}
+    
+    #this is the host application, we add children to it and that's it!
+    app = HydraApp(
+        title='Secure Hydralit Data Explorer',
+        favicon="🐙",
+        hide_streamlit_markers=True,
+        ##add a nice banner, this banner has been defined as 5 sections with spacing defined by the banner_spacing array below.
+        # use_banner_images=["./resources/hydra.png",None,{'header':"<h1 style='text-align:center;padding: 0px 0px;color:grey;font-size:200%;'>Secure Hydralit Explorer</h1><br>"},None,"./resources/lock.png"], 
+        # banner_spacing=[5,30,60,30,5],
+        use_navbar=True, 
+        navbar_sticky=True,
+        navbar_animation=True,
+        navbar_theme=over_theme
+    )
+
+    app.add_app(
+        "Home", icon="🏠", app=apps.HomeApp(area)
+        # is_home=True
+        )
+    app.add_app('Model Information', icon="ℹ️", app=apps.ModelInfo(area))    
+    app.add_app('Model Performance', icon="✔️", app=apps.ModelPerform(area))
+    app.add_app('Hydrology', icon="🏞️", app=apps.Hydro(area))
+    app.add_app('Sediment', icon="⏳", app=apps.Sed(area))
+    app.add_app('Salt', icon="🧂", app=apps.Salt(area))
+    app.add_app('Fire', icon="🔥", app=apps.Fire(area))
+    # app.add_app('Contact', icon="📞", app=apps.Contact(area))
+    app.add_loader_app(apps.MyLoadingApp(delay=0))
+
+    # #if we want to auto login a guest but still have a secure app, we can assign a guest account and go straight in
+    # app.enable_guest_access()
+
+    # #check user access level to determine what should be shown on the menu
+    # user_access_level, username = app.check_access()
+
+    # # If the menu is cluttered, just rearrange it into sections!
+    # # completely optional, but if you have too many entries, you can make it nicer by using accordian menus
+    # if user_access_level > 1:
+    #     complex_nav = {
+    #         'Home': ['Home'],
+    #         'Loader Playground': ['Loader Playground'],
+    #         'Intro 🏆': ['Cheat Sheet',"Solar Mach"],
+    #         'Hotstepper 🔥': ["Sequency Denoising","Sequency (Secure)"],
+    #         'Clustering': ["Uber Pickups"],
+    #         'NLP': ["Spacy NLP"],
+    #         'Cookie Cutter': ['Cookie Cutter']
+    #     }
+    # elif user_access_level == 1:
+    #     complex_nav = {
+    #         'Home': ['Home'],
+    #         'Loader Playground': ['Loader Playground'],
+    #         'Intro 🏆': ['Cheat Sheet',"Solar Mach"],
+    #         'Hotstepper 🔥': ["Sequency Denoising"],
+    #         'Clustering': ["Uber Pickups"],
+    #         'NLP': ["Spacy NLP"],
+    #         'Cookie Cutter': ['Cookie Cutter']
+    #     }
+    # else:
+    #     complex_nav = {
+    #         'Home': ['Home'],
+    #     }
+
+    st.sidebar.markdown(
+        f"""
+        <div class="container">
+            <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
+            <img class="logo-img2" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE2, "rb").read()).decode()}">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    # #and finally just the entire app and all the children.
+    # app.run(complex_nav)
+    app.run()
+

@@ -127,7 +127,6 @@ def t2(area):
                 ))
     gw_gages = gpd.read_file(os.path.join("./resources/watershed", area, 'gw_gages.shp'))
     gw_gages.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
-
     mfig.add_trace(
         go.Scattermapbox(
                 lat=gw_gages.geometry.y, lon=gw_gages.geometry.x,
@@ -142,6 +141,11 @@ def t2(area):
                 # marker=dict(
                 #     size=100, color ='rgb(56, 44, 100)',symbol='airport',
                 #     ),
+
+                # marker=dict(
+                #     size=100, color ='rgb(56, 44, 100)',symbol='airport',
+                #     ),
+                # opacity=0.8
                 ))  
     mapboxt = 'MapBox Token'
     mfig.update_geos(fitbounds="locations", visible=False)
@@ -154,7 +158,7 @@ def t2(area):
                 accesstoken=mapboxt, zoom=8, style="stamen-terrain"),
             legend=dict(
                 yanchor="top",
-                y=1.06,
+                y=1.05,
                 xanchor="center",
                 x=0.5,
                 orientation="h",
