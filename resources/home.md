@@ -5,7 +5,7 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 - **Main Python libraries:** powerd by base64, pandas, streamlit, plotly, geopandas
 - **Source code:** [github.com/spark-brc/crb_apexmf](https://github.com/spark-brc/crb_apexmf)
 
-***INTRODUCTION***: Texas A&M AgriLife Research and the Bureau of Land Management (BLM) conduct an in-depth assessment of water resources, salt, fire and land management in the Colorado River Basin. We've enhanced the Agricultural Policy / Environmental eXtender (APEX) model, coupling it with USGS MODFLOW (groundwater model) and Reactive Transport Model (RT3D), and implementing salinity module. We've built 6 APEX-MODFLOW models: Animas, White, Price, Dolores, Upper Green, and Gunnison in CRB. Currently, model optimizations are in progress against stream discharge, groundwater level, and sediment yield. In addition, various researches are ongoing and include [assessment of salinity transport](#assessment-of-salinity-transport), [wildland fire simulation](#wildland-fire-simulation), [assessment of water resources and fluxes](#assessment-of-water-resources-and-fluxes), [application of machine learning](#application-of-machine-learning), [drought & flood assessment](#drought-and-flood)
+***INTRODUCTION***: Texas A&M AgriLife Research and the Bureau of Land Management (BLM) conduct an in-depth assessment of water resources, salt, fire and land management in the Colorado River Basin. We've enhanced the Agricultural Policy / Environmental eXtender (APEX) model, coupling it with USGS MODFLOW (groundwater model) and Reactive Transport Model (RT3D), and implementing salinity module. We've built 6 APEX-MODFLOW models: Animas, White, Price, Dolores, Upper Green, and Gunnison in CRB. Currently, model optimizations are in progress against stream discharge, groundwater level, and sediment yield. In addition, various researches are ongoing and include [assessment of salinity transport](#assessment-of-salinity-transport), [wildland fire simulation](#wildland-fire-simulation), [assessment of water resources and fluxes](#assessment-of-water-resources-and-fluxes), [application of machine learning in CRB](#application-of-machine-learning-in-crb), [drought & flood assessment](#drought-and-flood-assessment)
 <br>
 
 ### Assessment of Salinity Transport
@@ -58,3 +58,15 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 - Investigation of the major sources of pollution during extreme events
 - Identification, categorization, and prediction of drought
 - Investigation of the impacts of drought on wildfire
+<br>
+
+### Development of Reproducible Model Optimization Framework
+- A reproducible model optimization framework is developed for decision supports and to assess sensitivity analysis, uncertainty quantification, and parameter estimation (PE).
+
+*Reproducible workflow of model optimization*
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/opt1.png?raw=true" width="50%"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/opt2.png?raw=true" width="50%"></p>
+
+### Developements of APEXMOD, APEX-CUTE, and Interactive Dashboard
+
+
