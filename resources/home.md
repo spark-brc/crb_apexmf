@@ -7,7 +7,7 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 
 ***INTRODUCTION***: Texas A&M AgriLife Research and the Bureau of Land Management (BLM) conduct an in-depth assessment of water resources, salt, fire and land management in the Colorado River Basin. We've enhanced the Agricultural Policy / Environmental eXtender (APEX) model, coupling it with USGS MODFLOW (groundwater model) and Reactive Transport Model (RT3D), and implementing salinity module. We've built 6 APEX-MODFLOW models: Animas, White, Price, Dolores, Upper Green, and Gunnison in CRB. Currently, model optimizations are in progress against stream discharge, groundwater level, and sediment yield. In addition, various researches are ongoing, including:
 
-#### Assessment of salinity transport
+### Assessment of salinity transport
 - Salt consists of 8 major ions (SO4, Ca, Mg, Na, Cl, K, CO3, HCO3)
 - Salt ion concentration simulated for each APEX soil layer, aquifer grid cell, and APEX stream
 - Salt ion mass transported in surface runoff, erosion, lateral flow, and groundwater discharge
@@ -19,7 +19,7 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 *Simulated Groundwater Salt Ion Concentration & Simulated Salt Ion In-Stream Loading (kg/day):*
 <p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/salt_results.png?raw=true" width="100%"></p>
 
-#### Wildland fire simulation
+### Wildland fire simulation
 - Wildfire alters biophysical and soil properties depending on the burn severity in a watershed
 - Changes in a river salt and sediment yield are one of the major consequences of fire due to changes in surface runoff processes.
 - To investigate this we selected five fire events across CRB at micro-watershed scale.
@@ -31,6 +31,18 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 <p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/fire_results.png?raw=true" width="100%"></p>
 
 ### Assessment of water resources and fluxes
-*Groundwater levels & Saturated Thickness | Groundwater recharge & SW-GW interctions*
+*Groundwater levels & Saturated Thickness | Groundwater recharge & SW-GW interctions (Animas watershed)*
 <p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/water.png?raw=true" width="100%"></p>
 
+### Application of machine learning in CRB
+- Investigation of dominant wildfires-related factors
+- Detecting areas with high potential for wildfires in advance
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/ml1.png?raw=true" width="100%"></p>
+- Investigation of dominant salinity-related factors in
+- Mapping the spatial distribution of salinity (monthly, seasonal, annual)
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/ml2.png?raw=true" width="100%"></p>
+### Drought & Flood
+- Examination of the impacts of flash droughts and floods on water quality (e.g., salt and sediment) 
+- Investigation of the major sources of pollution during extreme events
+- Identification, categorization, and prediction of drought
+- Investigation of the impacts of drought on wildfire
