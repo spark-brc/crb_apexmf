@@ -9,5 +9,6 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 	- Salt ion concentration simulated for each APEX soil layer, aquifer grid cell, and APEX stream
 	- Salt ion mass transported in surface runoff, erosion, lateral flow, and groundwater discharge
 	- Salt ion chemistry (precipitation-dissolution, cation exchange) simulated in soil and aquifer
+
 <p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/salt_flow.png?raw=true" width="1000"></p>
 <p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/salt_results.png?raw=true" width="1000"></p>
