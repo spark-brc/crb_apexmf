@@ -5,7 +5,7 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 - **Main Python libraries:** powerd by base64, pandas, streamlit, plotly, geopandas
 - **Source code:** [github.com/spark-brc/crb_apexmf](https://github.com/spark-brc/crb_apexmf)
 
-***INTRODUCTION***: Texas A&M AgriLife Research and the Bureau of Land Management (BLM) conduct an in-depth assessment of water resources, salt, fire and land management in the Colorado River Basin. We've enhanced the Agricultural Policy / Environmental eXtender (APEX) model, coupling it with USGS MODFLOW (groundwater model) and Reactive Transport Model (RT3D), and implementing salinity module. We've built 6 APEX-MODFLOW models: Animas, White, Price, Dolores, Upper Green, and Gunnison in CRB. Currently, model optimizations are in progress against stream discharge, groundwater level, and sediment yield. In addition, various researches are ongoing and include [assessment of salinity transport](#assessment-of-salinity-transport), [wildland fire simulation](#wildland-fire-simulation), [assessment of water resources and fluxes](#assessment-of-water-resources-and-fluxes), [application of machine learning in CRB](#application-of-machine-learning-in-crb), [drought & flood assessment](#drought-and-flood-assessment)
+***INTRODUCTION***: Texas A&M AgriLife Research and the Bureau of Land Management (BLM) conduct an in-depth assessment of water resources, salt, fire and land management in the Colorado River Basin. We've enhanced the Agricultural Policy / Environmental eXtender (APEX) model, coupling it with USGS MODFLOW (groundwater model) and Reactive Transport Model (RT3D), and implementing salinity module. We've built 6 APEX-MODFLOW models: Animas, White, Price, Dolores, Upper Green, and Gunnison in CRB. Currently, model optimizations are in progress against stream discharge, groundwater level, and sediment yield. In addition, various researches are ongoing and include [assessment of salinity transport](#assessment-of-salinity-transport), [wildland fire simulation](#wildland-fire-simulation), [assessment of water resources and fluxes](#assessment-of-water-resources-and-fluxes), [application of machine learning in CRB](#application-of-machine-learning-in-crb), [drought & flood assessment](#drought-and-flood-assessment), and [development of model supporting utilities](#developements-of-apexmod-and-apex-cute).
 <br>
 
 ### Assessment of Salinity Transport
@@ -64,9 +64,32 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 - A reproducible model optimization framework is developed for decision supports and to assess sensitivity analysis, uncertainty quantification, and parameter estimation (PE).
 
 *Reproducible workflow of model optimization*
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/opt1.png?raw=true" width="50%"></p>
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/opt2.png?raw=true" width="50%"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/opt1.png?raw=true" width="100%"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/opt2.png?raw=true" width="100%"></p>
 
-### Developements of APEXMOD, APEX-CUTE, and Interactive Dashboard
+<br>
 
+### Developements of APEXMOD and APEX-CUTE
+- #### [APEXMOD](https://github.com/spark-brc/APEXMOD) 
+  - Link APEX and MODFLOW
+  - Configure model settings
+  - Visualize model results
+
+*Interface of APEXMOD*
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/apexmod.png?raw=true" width="100%"></p>
+
+<br>
+
+- #### APEX-CUTE
+  - Perform sensitivity analysis
+  - Perform parameter estimation
+
+<br>
+
+### Publication
+- [Bailey, R.T., Tasdighi, A., Park, S., Tavakoli-Kivi, S., Abitew, T., Jeong, J., Green, C.H. and Worqlul, A.W., 2021. APEX-MODFLOW: A New Integrated Model to Simulate Hydrological Processes in Watershed Systems. Environmental Modelling & Software, p.105093.](https://doi.org/10.1016/j.envsoft.2021.105093)
+- A. Worqlul, J. Jeong, C. Green, T. Abitew “Streamflow simulation in high topographic gradients and snowmelt-dominated watershed using the APEX model - Price Watershed, Utah” (Under review)
+T. Abitew, J. Jeong, C. Green “Modeling landscape wind erosion processes on rangelands using the APEX model” (Internal review)
+- S. Kim, S. Kim, C.H. Green, J. Jeong “Multivariate Polynomial Regression Modeling of Total Dissolved-Solids in Rangeland Stormwater Runoff in the Western United States” (Internal review)
+- T. Abitew, S. Park, J. Jeong, C. Green “Understanding the effects of post-wildfire treatments on hydrological responses in Colorado River Basin” (In preparation)
 
