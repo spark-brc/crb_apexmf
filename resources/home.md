@@ -5,7 +5,7 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 - **Main Python libraries:** powerd by base64, pandas, streamlit, plotly, geopandas
 - **Source code:** [github.com/spark-brc/crb_apexmf](https://github.com/spark-brc/crb_apexmf)
 
-***INTRODUCTION***: Texas A&M AgriLife Research and the Bureau of Land Management (BLM) conduct an in-depth assessment of water resources, salt, fire and land management in the Colorado River Basin. We've enhanced the Agricultural Policy / Environmental eXtender (APEX) model, coupling it with USGS MODFLOW (groundwater model) and Reactive Transport Model (RT3D), and implementing salinity module. We've built 6 APEX-MODFLOW models: Animas, White, Price, Dolores, Upper Green, and Gunnison in CRB. Currently, model optimizations are in progress against stream discharge, groundwater level, and sediment yield. In addition, various researches are ongoing, including:
+***INTRODUCTION***: Texas A&M AgriLife Research and the Bureau of Land Management (BLM) conduct an in-depth assessment of water resources, salt, fire and land management in the Colorado River Basin. We've enhanced the Agricultural Policy / Environmental eXtender (APEX) model, coupling it with USGS MODFLOW (groundwater model) and Reactive Transport Model (RT3D), and implementing salinity module. We've built 6 APEX-MODFLOW models: Animas, White, Price, Dolores, Upper Green, and Gunnison in CRB. Currently, model optimizations are in progress against stream discharge, groundwater level, and sediment yield. In addition, various researches are ongoing and include [assessment of salinity transport](#assessment-of-salinity-transport), [wildland fire simulation](#wildland-fire-simulation), [assessment of water resources and fluxes](#assessment-of-water-resources-and-fluxes), [application of machine learning](#application-of-machine-learning), [drought & flood assessment](#drought-and-flood)
 
 ### Assessment of salinity transport
 - Salt consists of 8 major ions (SO4, Ca, Mg, Na, Cl, K, CO3, HCO3)
@@ -37,11 +37,14 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 ### Application of machine learning in CRB
 - Investigation of dominant wildfires-related factors
 - Detecting areas with high potential for wildfires in advance
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/ml1.png?raw=true" width="100%"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/ml1.png?raw=true" width="50%"></p>
+
 - Investigation of dominant salinity-related factors in
 - Mapping the spatial distribution of salinity (monthly, seasonal, annual)
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/ml2.png?raw=true" width="100%"></p>
-### Drought & Flood
+
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/ml2.png?raw=true" width="50%"></p>
+
+### Drought and Flood
 - Examination of the impacts of flash droughts and floods on water quality (e.g., salt and sediment) 
 - Investigation of the major sources of pollution during extreme events
 - Identification, categorization, and prediction of drought
