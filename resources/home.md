@@ -14,10 +14,10 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 - Salt ion chemistry (precipitation-dissolution, cation exchange) simulated in soil and aquifer
 
 *Workflow of APEX-MODFLOW-Salt*
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/salt_flow.png?raw=true" width="1000"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/salt_flow.png?raw=true" width="100%"></p>
 
 *Simulated Groundwater Salt Ion Concentration & Simulated Salt Ion In-Stream Loading (kg/day):*
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/salt_results.png?raw=true" width="1000"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/salt_results.png?raw=true" width="100%"></p>
 
 #### Wildland fire simulation
 - Wildfire alters biophysical and soil properties depending on the burn severity in a watershed
@@ -25,7 +25,12 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 - To investigate this we selected five fire events across CRB at micro-watershed scale.
 
 *Post-fire biophysical reduction as measured by the Leaf Area Index (LAI):*
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/fire_lai.png?raw=true" width="1000"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/fire_lai.png?raw=true" width="80%"></p>
 
 *Fire event simulation with APEX model- the 2002 Missionary Ridge fire & effect*
-<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/fire_lai.png?raw=true" width="1000"></p>
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/fire_results.png?raw=true" width="100%"></p>
+
+### Assessment of water resources and fluxes
+*Groundwater levels & Saturated Thickness | Groundwater recharge & SW-GW interctions*
+<p align="center"><img src="https://github.com/spark-brc/crb_apexmf/blob/main/resources/pics/water.png?raw=true" width="100%"></p>
+
