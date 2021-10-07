@@ -53,6 +53,7 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 
 <br>
 
+
 ### Drought and Flood Assessment
 - Examination of the impacts of flash droughts and floods on water quality (e.g., salt and sediment) 
 - Investigation of the major sources of pollution during extreme events
@@ -86,10 +87,11 @@ This web-based interactive dashboard helps analyze APEX-MODFLOW models in the Co
 
 <br>
 
+<br>
+
 ### Publication
 - [Bailey, R.T., Tasdighi, A., Park, S., Tavakoli-Kivi, S., Abitew, T., Jeong, J., Green, C.H. and Worqlul, A.W., 2021. APEX-MODFLOW: A New Integrated Model to Simulate Hydrological Processes in Watershed Systems. Environmental Modelling & Software, p.105093.](https://doi.org/10.1016/j.envsoft.2021.105093)
-- A. Worqlul, J. Jeong, C. Green, T. Abitew “Streamflow simulation in high topographic gradients and snowmelt-dominated watershed using the APEX model - Price Watershed, Utah” (Under review)
-T. Abitew, J. Jeong, C. Green “Modeling landscape wind erosion processes on rangelands using the APEX model” (Internal review)
-- S. Kim, S. Kim, C.H. Green, J. Jeong “Multivariate Polynomial Regression Modeling of Total Dissolved-Solids in Rangeland Stormwater Runoff in the Western United States” (Internal review)
-- T. Abitew, S. Park, J. Jeong, C. Green “Understanding the effects of post-wildfire treatments on hydrological responses in Colorado River Basin” (In preparation)
-
+- A. Worqlul, J. Jeong, C. Green, T. Abitew, Streamflow simulation in high topographic gradients and snowmelt-dominated watershed using the APEX model - Price Watershed, Utah (Under review)
+- T. Abitew, J. Jeong, C. Green, Modeling landscape wind erosion processes on rangelands using the APEX model (Internal review)
+- S. Kim, S. Kim, C.H. Green, J. Jeong, Multivariate Polynomial Regression Modeling of Total Dissolved-Solids in Rangeland Stormwater Runoff in the Western United, (Internal review)
+- T. Abitew, S. Park, J. Jeong, C. Green, Understanding the effects of post-wildfire treatments on hydrological responses in Colorado River Basin (In preparation)

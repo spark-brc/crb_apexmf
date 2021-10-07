@@ -131,12 +131,13 @@ if __name__ == '__main__':
         "Home", icon="🏠", app=apps.HomeApp(area)
         # is_home=True
         )
-    app.add_app('Model Information', icon="ℹ️", app=apps.ModelInfo(area))    
+    
     app.add_app('Model Performance', icon="✔️", app=apps.ModelPerform(area))
     app.add_app('Hydrology', icon="🏞️", app=apps.Hydro(area))
     app.add_app('Sediment', icon="⏳", app=apps.Sed(area))
     app.add_app('Salt', icon="🧂", app=apps.Salt(area))
     app.add_app('Fire', icon="🔥", app=apps.Fire(area))
+    app.add_app('Model Information', icon="ℹ️", app=apps.ModelInfo(area))    
     # app.add_app('Contact', icon="📞", app=apps.Contact(area))
     app.add_loader_app(apps.MyLoadingApp(delay=0))
 
