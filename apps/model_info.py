@@ -26,6 +26,6 @@ class ModelInfo(HydraHeadApp):
         # tdf.dataframe(df, height=500)
 
         intro_markdown = utils.read_markdown_file(
-            os.path.join("./resources/watershed", "Animas/description", "Animas APEX-MODFLOW.md")
+            os.path.join("./resources/watershed", "Animas (calibrated)/description", "Animas APEX-MODFLOW.md")
         )
         mdmain.markdown(intro_markdown, unsafe_allow_html=True)
