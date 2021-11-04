@@ -723,7 +723,7 @@ def loc_map(area):
                 mode='markers', 
                 # text = stf_gages['HydroID'],
                 text = [
-                    '<b>Site Name</b>:' + str(stf_gages['site_name'][i]) + 
+                    '<b>Site Name</b>:' + str(stf_gages['SITENAME'][i]) + 
                     '<br>' + '<b>Reach</b>:' + f"{stf_gages['Subbasin'][i]:d}" for i in range(stf_gages.shape[0])],
                 # fillcolor='#FFFFFF',
                 hovertemplate = '%{text}<extra></extra>',
@@ -752,7 +752,7 @@ def loc_map(area):
                 lat=gw_gages.geometry.y, lon=gw_gages.geometry.x,
                 mode='markers',
                 text = [
-                    '<b>Site Name</b>: ' + gw_gages['Site_name'][i] + 
+                    '<b>Site Name</b>: ' + gw_gages['SITENAME'][i] + 
                     '<br>' + '<b>Label</b>: ' + gw_gages['cali_name'][i] +
                     '<br>' + '<b>Grid Id</b>: ' + str(gw_gages['grid_id'][i]) for i in range(gw_gages.shape[0])
                 ]   ,
