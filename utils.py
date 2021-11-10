@@ -622,6 +622,45 @@ def gw_scatter(gwdf):
                     )
     return fig
 
+def gw_scatter_mon(gwdf):
+    gwdf = gwdf.resample('M').mean()
+    fig = go.Figure()
+    colors = (get_matplotlib_cmap('tab10', bins=8))
+    # fig = px.scatter(gwdf, x="sim", y="obd", color="grid_id",trendline="ols")
+    fig = px.scatter(gwdf, x="sim", y="obd", color="grid_id", trendline="ols", trendline_scope="overall")
+    fig.update_layout(
+        # showlegend=False,
+        plot_bgcolor='white',
+        height=600,
+        # width=1200
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Simulated Groundwater Level (meters)')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray', title='Observed Groundwater Level (meters)')
+    fig.update_layout(
+        margin={"r":0,"t":0,"l":0,"b":0},
+        legend=dict(
+            yanchor="top",
+            y=1.0,
+            xanchor="center",
+            x=0.5,
+            orientation="h",
+            title='',
+            ),
+        hovermode= "x unified",
+        modebar={'orientation': 'v'})
+    fig.update_traces(marker=dict(size=10, opacity=0.5,
+                                line=dict(width=1,
+                                            color='white')
+                                            ),
+                    selector=dict(mode='markers'),
+                    # hovertemplate=None
+                    )
+    return fig
+
+
+
+
+
 def gw_scatter2(gwdf):
 
     fig = go.Figure()

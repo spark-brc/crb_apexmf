@@ -102,6 +102,8 @@ class ModelPerform(HydraHeadApp):
             st.markdown("## Groundwater Levels (Depth to water)")
             gwcol1, gwspace, gwcol2= st.columns([0.45, 0.1, 0.45])
             gwcol1.plotly_chart(utils.gw_scatter(gwdf),  use_container_width=True)
+            # gwcol1.plotly_chart(utils.gw_scatter_mon(gwdf),  use_container_width=True)
+            
             gwcol2.dataframe(gwdf, height=600)
             gwcol2.markdown(utils.gwfiledownload(gwdf), unsafe_allow_html=True)
             
