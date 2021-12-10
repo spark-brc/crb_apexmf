@@ -110,7 +110,7 @@ def t2(area):
         go.Scattermapbox(
                 lat=stf_gages.geometry.y, lon=stf_gages.geometry.x,
                 mode='markers', 
-                text = stf_gages['HydroID'],
+                text = stf_gages['Subbasin'],
                 # fillcolor='#FFFFFF',
                 hovertemplate = '<b>Sub</b>: <b>%{text}</b><extra></extra>',
                 below='False',
