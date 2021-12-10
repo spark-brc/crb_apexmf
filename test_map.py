@@ -8,7 +8,7 @@ import logging
 import plotly.express as px
 
 
-wd = r"D:\Projects\Tools\crb_apexmf\crb_apexmf_git\resources\watershed\Animas"
+wd = r"D:\Projects\Tools\crb_apexmf\crb_apexmf_git\resources\watershed\Dolores"
 
 def t1(wd):
     # reading in the polygon shapefile
@@ -224,6 +224,6 @@ def t2(area):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.CRITICAL)
     fig = t1(wd)
-    mfig = t2("Animas")
+    mfig = t2("Dolores")
     st.plotly_chart(fig)
     st.plotly_chart(mfig)
