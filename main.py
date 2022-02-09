@@ -117,7 +117,7 @@ if __name__ == '__main__':
     app = HydraApp(
         title='Secure Hydralit Data Explorer',
         favicon="🐙",
-        hide_streamlit_markers=True,
+        # hide_streamlit_markers=True,
         ##add a nice banner, this banner has been defined as 5 sections with spacing defined by the banner_spacing array below.
         # use_banner_images=["./resources/hydra.png",None,{'header':"<h1 style='text-align:center;padding: 0px 0px;color:grey;font-size:200%;'>Secure Hydralit Explorer</h1><br>"},None,"./resources/lock.png"], 
         # banner_spacing=[5,30,60,30,5],
@@ -128,8 +128,8 @@ if __name__ == '__main__':
     )
 
     app.add_app(
-        "Home", icon="🏠", app=apps.HomeApp(area)
-        # is_home=True
+        'Home', icon='🏠', app=apps.HomeApp(area),
+        is_home=True
         )
     
     app.add_app('Model Performance', icon="✔️", app=apps.ModelPerform(area))
@@ -183,6 +183,9 @@ if __name__ == '__main__':
         """,
         unsafe_allow_html=True
     )
+    # complex_nav = {
+    #         'Home': ['Home']
+    # }
     # #and finally just the entire app and all the children.
     # app.run(complex_nav)
     app.run()
