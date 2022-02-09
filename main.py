@@ -1,11 +1,6 @@
-import logging
-import plotly.express as px
 import streamlit as st
-import os
 import pandas as pd
 import base64
-import numpy as np
-import glob
 import utils
 from hydralit import HydraApp
 import apps
@@ -121,7 +116,7 @@ if __name__ == '__main__':
         ##add a nice banner, this banner has been defined as 5 sections with spacing defined by the banner_spacing array below.
         # use_banner_images=["./resources/hydra.png",None,{'header':"<h1 style='text-align:center;padding: 0px 0px;color:grey;font-size:200%;'>Secure Hydralit Explorer</h1><br>"},None,"./resources/lock.png"], 
         # banner_spacing=[5,30,60,30,5],
-        use_navbar=True, 
+        # use_navbar=False, 
         navbar_sticky=True,
         navbar_animation=True,
         navbar_theme=over_theme
