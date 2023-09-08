@@ -1,4 +1,4 @@
-pandas==2.1.0
+pandas
 geopandas==0.13.2
 matplotlib==3.7.2
 hydralit==1.0.14
