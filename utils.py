@@ -581,7 +581,8 @@ def tot_dtw(area, stdate, cal_start, cal_end, grid_ids, obd_nams, time_step=None
         df = df.dropna() # drop nan
         new_cols ={x:y for x, y in zip(df.columns, ['sim', 'obd'])} #replace col nams with new nams
         df['grid_id'] = str(grid_id)
-        tot_df = tot_df.append(df.rename(columns=new_cols))
+        # tot_df = tot_df.append(df.rename(columns=new_cols))
+        tot_df = pd.concat([tot_df, df.rename(columns=new_cols)])
         tot_df.loc[tot_df.sim > 0, 'sim'] = -0.001
 
     return tot_df
@@ -656,9 +657,6 @@ def gw_scatter_mon(gwdf):
                     # hovertemplate=None
                     )
     return fig
-
-
-
 
 
 def gw_scatter2(gwdf):

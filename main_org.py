@@ -124,7 +124,7 @@ def main(df, sims, gwdf):
     
 
 
-@st.cache
+@st.cache_data
 def load_data():
     time_step = 'M'
     caldate = '1/1/{}'.format(sim_range[0])
